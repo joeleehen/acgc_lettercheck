@@ -31,7 +31,34 @@
         -20 points
 */
 
-int int main(int argc, char *argv[])
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int main(int argc, char *argv[])
 {
+    FILE *letter;
+    int value;
+
+    if (argc == 1) {
+        printf("ERROR: no input file specified.\n");
+        return 1;
+    }
+
+    char * input_file = argv[1];
+ 
+    letter = fopen(input_file, "r");
+    if (letter == NULL) {
+        printf("ERROR: file %s not found!", input_file);
+        return 1;
+    }
+    while (1) {
+        // TODO: this just reads each character
+        value = fgetc(letter);
+        if (value == EOF) break;
+        else printf("%c", value);
+    }
+    fclose(letter);
+
     return 0;
 }
