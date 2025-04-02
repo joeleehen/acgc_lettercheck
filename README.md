@@ -24,6 +24,6 @@ The [Animal Crossing Decompilation Team](https://github.com/ACreTeam) for doing 
 - [ ] Check 6) Run-on Sentence Check
 - [ ] Check 7) 32-Character Check
 ## Later Down the Road
--[ ] (?)Replicate trigram table bug to match in-game behavior
--[ ] `ncurses` terminal interface
--[ ] `GTK` GUI
+- [ ] (?)Replicate trigram table bug to match in-game behavior
+- [ ] `ncurses` terminal interface
+- [ ] `GTK` GUI
