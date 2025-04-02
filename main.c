@@ -109,14 +109,20 @@ int runon_check(char letter[], int letter_length) {
         if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
             printf("found punctuation at index %d\n", i);
             // if there aren't 75 characters after punctuation, no deduction
-            if (i + 75 > letter_length - 2) return 0;
-            for (int j = i; j < i + 75; j++) {
+            if (i + 75 > letter_length - 2) {
+                printf("there aren't 75 characters left to examine\n");
+                return 0;
+            }
+            int j = i + 1;
+            for (j; j < i + 76; j++) {
                 if (letter[j] == '.' || letter[j] == '!' || letter[j] == '?') {
+                    printf("found another punctuation mark at index %d", j);
                     i = j;
                     break;
                 }
             }
-            return -150;
+            if (i != j) return -150;
+            // return -150;
         } else i++;
     }
     return score;
