@@ -1,5 +1,8 @@
 # acgc_lettercheck
 My own implementation of the mail-grading system used in Animal Crossing for the GameCube, written in C.
+<p align="center">
+  <img src="https://c.tenor.com/tFRflX-rmpkAAAAM/animalcrossing-happy.gif" />
+</p>
 
 # About
 The original Animal Crossing for the Nintendo GameCube allows players to send letters to their NPC villagers. The villagers would respond positively or negatively based on the content of the player's letter. A well-composed letter would prompt a nice response, a middling letter would be ignored, and a poorly written letter would cause villagers to send an angry letter in return.
