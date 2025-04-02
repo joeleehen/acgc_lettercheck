@@ -24,7 +24,7 @@
 
 6) Run-on Sentence Check
     - If the letter has 75 or more characters and there are no punctuation marks in the first
-    75 characters, -150 points
+    75 characters, -50 points
 
 7) 32-character Check
     - Split the letter into 32-character group. For every group that does NOT have a space,
@@ -55,7 +55,7 @@ int repeating_char_check(char letter[], int letter_length) {
     while (idx < letter_length - 3) {
         if (letter[idx] == letter[idx + 1]) {
             if (letter[idx] == letter[idx + 2]) {
-                return -150;
+                return -50;
             } else idx += 2;
         } else idx += 1;
     }
@@ -83,11 +83,51 @@ int space_ratio_check(char letter[], int letter_length) {
     return score;
 }
 
+int has_punctuation(char letter[]) {
+    // check the first 75 characters of a letter for {., !, ?}
+    // NOTE: this function is only called when a letter has 75 or more characters!
+    for (int i = 0; i < 75; i++) {
+        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int runon_check(char letter[], int letter_length) {
+    int score = 0;
+
+    if (letter_length < 75) return 0;
+
+    // if a letter has at least one punctuation mark before the final 75 characters...
+    if (!has_punctuation(letter)) return 0;
+
+    // ...check after each punctuation mark for 75 characters without punctuation
+    int i = 0;
+    printf("checking for run on sentence...\n");
+    while (i < letter_length) {
+        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+            printf("found punctuation at index %d\n", i);
+            // if there aren't 75 characters after punctuation, no deduction
+            if (i + 75 > letter_length - 2) return 0;
+            for (int j = i; j < i + 75; j++) {
+                if (letter[j] == '.' || letter[j] == '!' || letter[j] == '?') {
+                    i = j;
+                    break;
+                }
+            }
+            return -150;
+        } else i++;
+    }
+    return score;
+}
+
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
+    final_score += runon_check(letter, letter_length);
 
     return final_score;
 }
