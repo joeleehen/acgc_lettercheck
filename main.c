@@ -50,9 +50,30 @@ int start_capital_check(char letter[], int letter_length) {
     return score;
 }
 
+int space_ratio_check(char letter[], int letter_length) {
+    int score = -20;
+    int spaces = 0;
+    int nonspaces = 0;
+
+    for (int i = 0; i < letter_length; i++) {
+        if ((int)letter[i] == 32) spaces++;
+        else nonspaces++;
+    }
+
+    if (nonspaces == 0) {
+        return score;
+    }
+
+    int space_ratio = (spaces * 100) / nonspaces;
+    if (space_ratio >= 20) score = 20;
+
+    return score;
+}
+
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += start_capital_check(letter, letter_length);
+    final_score += space_ratio_check(letter, letter_length);
 
     return final_score;
 }
