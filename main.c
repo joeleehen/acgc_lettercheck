@@ -35,30 +35,71 @@
 #include <string.h>
 #include <stdlib.h>
 
+int start_capital_check(char letter[], int letter_length) {
+    int score = -10;
+    int i;
+
+    for (i = 0; i < letter_length; i++) {
+        int ascii = (int)letter[i];
+        if (ascii >= 65 && ascii <= 90) {
+            score = 20;
+            break;
+        }
+    }
+
+    return score;
+}
+
+int score_letter(char* letter, int letter_length) {
+    int final_score = 0;
+    final_score += start_capital_check(letter, letter_length);
+
+    return final_score;
+}
+
 int main(int argc, char *argv[])
 {
-    FILE *letter;
-    int value;
+    char *buffer;
+    FILE *letter_file;
+    int letter_score = 0;
 
     if (argc == 1) {
         printf("ERROR: no input file specified.\n");
         return 1;
     }
 
-    char * input_file = argv[1];
+    char * filename = argv[1];
  
-    letter = fopen(input_file, "r");
-    if (letter == NULL) {
-        printf("ERROR: file %s not found!", input_file);
+    letter_file = fopen(filename, "rb");
+    if (letter_file == NULL) {
+        printf("ERROR: file %s not found!", filename);
         return 1;
     }
-    while (1) {
-        // TODO: this just reads each character
-        value = fgetc(letter);
-        if (value == EOF) break;
-        else printf("%c", value);
+
+    fseek(letter_file, 0, SEEK_END);
+    long letter_size = ftell(letter_file);
+    fseek(letter_file, 0, SEEK_SET);
+    // printf("the letter is of size %d\n", letter_size);
+    buffer = (char *)malloc(letter_size);
+
+    if (buffer == NULL) {
+        printf("ERROR: couldn't read file %s into memory!\n", filename);
+        return 1;
     }
-    fclose(letter);
+
+    fread(buffer, 1, letter_size, letter_file);
+
+    if (!buffer) {
+        printf("ERROR: could not read file into memory buffer!");
+        return 1;
+    }
+
+    letter_score = score_letter(buffer, letter_size);
+
+    printf("letter score: %d", letter_score);
+
+
+    fclose(letter_file);
 
     return 0;
 }
