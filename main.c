@@ -37,9 +37,8 @@
 
 int start_capital_check(char letter[], int letter_length) {
     int score = -10;
-    int i;
 
-    for (i = 0; i < letter_length; i++) {
+    for (int i = 0; i < letter_length; i++) {
         int ascii = (int)letter[i];
         if (ascii >= 65 && ascii <= 90) {
             score = 20;
@@ -48,6 +47,20 @@ int start_capital_check(char letter[], int letter_length) {
     }
 
     return score;
+}
+
+int repeating_char_check(char letter[], int letter_length) {
+    int idx = 0;
+
+    while (idx < letter_length - 3) {
+        if (letter[idx] == letter[idx + 1]) {
+            if (letter[idx] == letter[idx + 2]) {
+                return -150;
+            } else idx += 2;
+        } else idx += 1;
+    }
+ 
+    return 0;
 }
 
 int space_ratio_check(char letter[], int letter_length) {
@@ -73,6 +86,7 @@ int space_ratio_check(char letter[], int letter_length) {
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += start_capital_check(letter, letter_length);
+    final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
 
     return final_score;
