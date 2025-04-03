@@ -48,11 +48,13 @@ int adjacent_check(char letter[], int letter_length, int idx) {
         printf("%c", letter[idx + offset]);
         int ascii = (int)letter[idx + offset];
         if (ascii >= 65 && ascii <= 90) {
+            printf("    adding puncCap");
             return 10;
         }
     }
 
     // no capital found
+    printf("    subtracting puncCap");
     return -10;
 }
 
@@ -69,7 +71,9 @@ int punc_and_cap(char letter[], int letter_length) {
     // check last char for punctuation
     if (letter_length < 193) {
         if (is_punc(letter[letter_length - 2])) score += 20;
-    }
+    } else printf("letter too big, not checking last char\n");
+
+    printf("score from check 1: %d\n", score);
     return score;
 }
 
