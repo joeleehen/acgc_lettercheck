@@ -35,6 +35,33 @@
 #include <string.h>
 #include <stdlib.h>
 
+int adjacent_check(char letter[], int letter_length, int idx) {
+    // check the next three characters after a given idx for a capital letter
+    printf("examining: %c", letter[idx]);
+    for (int offset = 1; offset < 4; offset++) {
+        if (idx + offset >= letter_length) break;
+        printf("%c", letter[idx + offset]);
+        int ascii = (int)letter[idx + offset];
+        if (ascii >= 65 && ascii <= 90) {
+            return 10;
+        }
+    }
+
+    return 0;
+}
+
+// FIXME: do we double-count trailing punctuation? or does it only get credit once?
+int punc_and_cap(char letter[], int letter_length) {
+    int score = 0;
+
+    for (int i = 0; i < letter_length; i++) {
+        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+            score += adjacent_check(letter, letter_length, i);
+        }
+    }
+    return score;
+}
+
 int start_capital_check(char letter[], int letter_length) {
     int score = -10;
 
@@ -131,6 +158,7 @@ int runon_check(char letter[], int letter_length) {
 
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
+    final_score += punc_and_cap(letter, letter_length);
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
