@@ -35,11 +35,16 @@
 #include <string.h>
 #include <stdlib.h>
 
+int is_punc(char c) {
+    if (c == '.' || c == '?' || c == '!') return 1;
+    return 0;
+}
+
 int adjacent_check(char letter[], int letter_length, int idx) {
     // check the next three characters after a given idx for a capital letter
     printf("examining: %c", letter[idx]);
     for (int offset = 1; offset < 4; offset++) {
-        if (idx + offset >= letter_length) break;
+        if (idx + offset >= letter_length) return 0; // avoids overflow
         printf("%c", letter[idx + offset]);
         int ascii = (int)letter[idx + offset];
         if (ascii >= 65 && ascii <= 90) {
@@ -47,17 +52,23 @@ int adjacent_check(char letter[], int letter_length, int idx) {
         }
     }
 
-    return 0;
+    // no capital found
+    return -10;
 }
 
-// FIXME: do we double-count trailing punctuation? or does it only get credit once?
 int punc_and_cap(char letter[], int letter_length) {
     int score = 0;
 
     for (int i = 0; i < letter_length; i++) {
-        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+        if (is_punc(letter[i])) {
             score += adjacent_check(letter, letter_length, i);
+            printf("\n");
         }
+    }
+
+    // check last char for punctuation
+    if (letter_length < 193) {
+        if (is_punc(letter[letter_length - 2])) score += 20;
     }
     return score;
 }
@@ -115,7 +126,7 @@ int has_punctuation(char letter[], int letter_length) {
     // NOTE: this function is only called when a letter has 75 or more characters!
     int idx = letter_length - 75;
     for (int i = 0; i < idx; i++) {
-        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+        if (is_punc(letter[i])) {
             return 1;
         }
     }
@@ -132,19 +143,15 @@ int runon_check(char letter[], int letter_length) {
 
     // ...check after each punctuation mark for 75 characters without punctuation
     int i = 0;
-    printf("checking for run on sentence...\n");
     while (i < letter_length) {
-        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
-            printf("found punctuation at index %d\n", i);
+        if (is_punc(letter[i])) {
             // if there aren't 75 characters after punctuation, no deduction
             if (i + 75 > letter_length - 2) {
-                printf("there aren't 75 characters left to examine\n");
                 return 0;
             }
             int j = i + 1;
             for (j; j < i + 76; j++) {
-                if (letter[j] == '.' || letter[j] == '!' || letter[j] == '?') {
-                    printf("found another punctuation mark at index %d", j);
+                if (is_punc(letter[j])) {
                     i = j;
                     break;
                 }
