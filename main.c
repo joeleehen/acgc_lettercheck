@@ -83,10 +83,11 @@ int space_ratio_check(char letter[], int letter_length) {
     return score;
 }
 
-int has_punctuation(char letter[]) {
-    // check the first 75 characters of a letter for {., !, ?}
+int has_punctuation(char letter[], int letter_length) {
+    // check the first (length - 75) characters for {'.', '!', '?'}
     // NOTE: this function is only called when a letter has 75 or more characters!
-    for (int i = 0; i < 75; i++) {
+    int idx = letter_length - 75;
+    for (int i = 0; i < idx; i++) {
         if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
             return 1;
         }
@@ -100,7 +101,7 @@ int runon_check(char letter[], int letter_length) {
     if (letter_length < 75) return 0;
 
     // if a letter has at least one punctuation mark before the final 75 characters...
-    if (!has_punctuation(letter)) return 0;
+    if (!has_punctuation(letter, letter_length)) return 0;
 
     // ...check after each punctuation mark for 75 characters without punctuation
     int i = 0;
