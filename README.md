@@ -26,7 +26,7 @@ The [Animal Crossing Decompilation Team](https://github.com/ACreTeam) for doing 
 - [x] Check 5) Space Ratio Check
 - [x] Check 6) Run-on Sentence Check
 - [ ] Check 7) 32-Character Check
-- [ ] 192 Character limit when reading input file
+- [x] 192 Character limit when reading input file
 ## Later Down the Road
 - [ ] (?)Replicate trigram table bug to match in-game behavior
 - [ ] `ncurses` terminal interface
