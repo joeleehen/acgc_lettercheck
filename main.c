@@ -160,8 +160,8 @@ int main(int argc, char *argv[])
 
     fseek(letter_file, 0, SEEK_END);
     long letter_size = ftell(letter_file);
+    if (letter_size > 192) letter_size = 192;
     fseek(letter_file, 0, SEEK_SET);
-    // printf("the letter is of size %d\n", letter_size);
     buffer = (char *)malloc(letter_size);
 
     if (buffer == NULL) {
@@ -171,6 +171,12 @@ int main(int argc, char *argv[])
 
     fread(buffer, 1, letter_size, letter_file);
 
+    if (letter_size == 192) {
+        letter_size++;
+        buffer = realloc(buffer, letter_size);
+        buffer[192] = '\0';
+    }
+
     if (!buffer) {
         printf("ERROR: could not read file into memory buffer!");
         return 1;
@@ -178,9 +184,10 @@ int main(int argc, char *argv[])
 
     letter_score = score_letter(buffer, letter_size);
 
-    printf("letter score: %d", letter_score);
+    printf("letter score: %d\n", letter_score);
 
 
+    free(buffer);
     fclose(letter_file);
 
     return 0;
