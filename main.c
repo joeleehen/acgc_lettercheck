@@ -44,6 +44,9 @@ int adjacent_check(char letter[], int letter_length, int idx) {
     // check the next three characters after a given idx for a capital letter
     printf("examining: %c", letter[idx]);
     for (int offset = 1; offset < 4; offset++) {
+        // avoiding overflow with edge cases when length is (almost) maximum
+        if (idx + offset > 192) return -10;
+        if (idx + offset >= letter_length && letter_length > 190) return -10;
         if (idx + offset >= letter_length) return 0; // avoids overflow
         printf("%c", letter[idx + offset]);
         int ascii = (int)letter[idx + offset];
