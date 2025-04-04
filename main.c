@@ -176,6 +176,7 @@ int runon_check(char letter[], int letter_length) {
 
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
+    final_score += punc_and_cap(letter, letter_length);
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
