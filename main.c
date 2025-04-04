@@ -133,7 +133,7 @@ int has_punctuation(char letter[], int letter_length) {
     // NOTE: this function is only called when a letter has 75 or more characters!
     int idx = letter_length - 75;
     for (int i = 0; i < idx; i++) {
-        if (is_punc(letter[i])) {
+        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
             return 1;
         }
     }
@@ -150,15 +150,19 @@ int runon_check(char letter[], int letter_length) {
 
     // ...check after each punctuation mark for 75 characters without punctuation
     int i = 0;
+    printf("checking for run on sentence...\n");
     while (i < letter_length) {
-        if (is_punc(letter[i])) {
+        if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
+            printf("found punctuation at index %d\n", i);
             // if there aren't 75 characters after punctuation, no deduction
             if (i + 75 > letter_length - 2) {
+                printf("there aren't 75 characters left to examine\n");
                 return 0;
             }
             int j = i + 1;
             for (j; j < i + 76; j++) {
-                if (is_punc(letter[j])) {
+                if (letter[j] == '.' || letter[j] == '!' || letter[j] == '?') {
+                    printf("found another punctuation mark at index %d", j);
                     i = j;
                     break;
                 }
@@ -172,7 +176,6 @@ int runon_check(char letter[], int letter_length) {
 
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
-    final_score += punc_and_cap(letter, letter_length);
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
@@ -202,8 +205,8 @@ int main(int argc, char *argv[])
 
     fseek(letter_file, 0, SEEK_END);
     long letter_size = ftell(letter_file);
+    if (letter_size > 192) letter_size = 192;
     fseek(letter_file, 0, SEEK_SET);
-    // printf("the letter is of size %d\n", letter_size);
     buffer = (char *)malloc(letter_size);
 
     if (buffer == NULL) {
@@ -213,6 +216,12 @@ int main(int argc, char *argv[])
 
     fread(buffer, 1, letter_size, letter_file);
 
+    if (letter_size == 192) {
+        letter_size++;
+        buffer = realloc(buffer, letter_size);
+        buffer[192] = '\0';
+    }
+
     if (!buffer) {
         printf("ERROR: could not read file into memory buffer!");
         return 1;
@@ -220,9 +229,10 @@ int main(int argc, char *argv[])
 
     letter_score = score_letter(buffer, letter_size);
 
-    printf("letter score: %d", letter_score);
+    printf("letter score: %d\n", letter_score);
 
 
+    free(buffer);
     fclose(letter_file);
 
     return 0;
