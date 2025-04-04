@@ -35,6 +35,45 @@
 #include <string.h>
 #include <stdlib.h>
 
+int is_punc(char c) {
+    if (c == '.' || c == '?' || c == '!') return 1;
+    return 0;
+}
+
+int adjacent_check(char letter[], int letter_length, int idx) {
+    // check the next three characters after a given idx for a capital letter
+    for (int offset = 1; offset < 4; offset++) {
+        // avoiding overflow with edge cases when length is (almost) maximum
+        if (idx + offset > 192) return -10;
+        if (idx + offset >= letter_length && letter_length > 190) return -10;
+        if (idx + offset >= letter_length) return 0; // avoids overflow
+        int ascii = (int)letter[idx + offset];
+        if (ascii >= 65 && ascii <= 90) {
+            return 10;
+        }
+    }
+
+    // no capital found
+    return -10;
+}
+
+int punc_and_cap(char letter[], int letter_length) {
+    int score = 0;
+
+    for (int i = 0; i < letter_length; i++) {
+        if (is_punc(letter[i])) {
+            score += adjacent_check(letter, letter_length, i);
+        }
+    }
+
+    // check last char for punctuation
+    if (letter_length < 193) {
+        if (is_punc(letter[letter_length - 2])) score += 20;
+    }
+
+    return score;
+}
+
 int start_capital_check(char letter[], int letter_length) {
     int score = -10;
 
@@ -131,6 +170,7 @@ int runon_check(char letter[], int letter_length) {
 
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
+    final_score += punc_and_cap(letter, letter_length);
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
@@ -160,8 +200,8 @@ int main(int argc, char *argv[])
 
     fseek(letter_file, 0, SEEK_END);
     long letter_size = ftell(letter_file);
+    if (letter_size > 192) letter_size = 192;
     fseek(letter_file, 0, SEEK_SET);
-    // printf("the letter is of size %d\n", letter_size);
     buffer = (char *)malloc(letter_size);
 
     if (buffer == NULL) {
@@ -171,6 +211,12 @@ int main(int argc, char *argv[])
 
     fread(buffer, 1, letter_size, letter_file);
 
+    if (letter_size == 192) {
+        letter_size++;
+        buffer = realloc(buffer, letter_size);
+        buffer[192] = '\0';
+    }
+
     if (!buffer) {
         printf("ERROR: could not read file into memory buffer!");
         return 1;
@@ -178,9 +224,10 @@ int main(int argc, char *argv[])
 
     letter_score = score_letter(buffer, letter_size);
 
-    printf("letter score: %d", letter_score);
+    printf("letter score: %d\n", letter_score);
 
 
+    free(buffer);
     fclose(letter_file);
 
     return 0;
