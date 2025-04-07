@@ -40,7 +40,7 @@ int is_punc(char c) {
     return 0;
 }
 
-int adjacent_check(char letter[], int letter_length, int idx) {
+int adjacent_check(char* letter, int letter_length, int idx) {
     // check the next three characters after a given idx for a capital letter
     for (int offset = 1; offset < 4; offset++) {
         // avoiding overflow with edge cases when length is (almost) maximum
@@ -57,7 +57,7 @@ int adjacent_check(char letter[], int letter_length, int idx) {
     return -10;
 }
 
-int punc_and_cap(char letter[], int letter_length) {
+int punc_and_cap(char* letter, int letter_length) {
     int score = 0;
 
     for (int i = 0; i < letter_length; i++) {
@@ -74,7 +74,7 @@ int punc_and_cap(char letter[], int letter_length) {
     return score;
 }
 
-int start_capital_check(char letter[], int letter_length) {
+int start_capital_check(char* letter, int letter_length) {
     int score = -10;
 
     for (int i = 0; i < letter_length; i++) {
@@ -88,7 +88,7 @@ int start_capital_check(char letter[], int letter_length) {
     return score;
 }
 
-int repeating_char_check(char letter[], int letter_length) {
+int repeating_char_check(char* letter, int letter_length) {
     int idx = 0;
 
     while (idx < letter_length - 3) {
@@ -102,7 +102,7 @@ int repeating_char_check(char letter[], int letter_length) {
     return 0;
 }
 
-int space_ratio_check(char letter[], int letter_length) {
+int space_ratio_check(char* letter, int letter_length) {
     int score = -20;
     int spaces = 0;
     int nonspaces = 0;
@@ -122,7 +122,7 @@ int space_ratio_check(char letter[], int letter_length) {
     return score;
 }
 
-int has_punctuation(char letter[], int letter_length) {
+int has_punctuation(char* letter, int letter_length) {
     // check the first (length - 75) characters for {'.', '!', '?'}
     // NOTE: this function is only called when a letter has 75 or more characters!
     int idx = letter_length - 75;
@@ -134,7 +134,7 @@ int has_punctuation(char letter[], int letter_length) {
     return 0;
 }
 
-int runon_check(char letter[], int letter_length) {
+int runon_check(char* letter, int letter_length) {
     int score = 0;
 
     if (letter_length < 75) return 0;
@@ -168,6 +168,26 @@ int runon_check(char letter[], int letter_length) {
     return score;
 }
 
+int chunk_check(char* letter, int letter_length) {
+    int score = 0;
+    int chunks_with_spaces = 0;
+    int chunks_to_score = (letter_length - 1) / 32;
+
+    for (int i = 0; i < chunks_to_score; i++) {
+        for (int j = 0; j < 32; j++) {
+            int idx = (32 * i) + j;
+            if (letter[idx] == ' ') {
+                chunks_with_spaces++;
+                break;
+            }
+        }
+    }
+
+    score -= 20 * (chunks_to_score - chunks_with_spaces);
+
+    return score;
+}
+
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += punc_and_cap(letter, letter_length);
@@ -175,6 +195,7 @@ int score_letter(char* letter, int letter_length) {
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
     final_score += runon_check(letter, letter_length);
+    final_score += chunk_check(letter, letter_length);
 
     return final_score;
 }
