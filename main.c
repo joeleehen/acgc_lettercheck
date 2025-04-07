@@ -183,14 +183,8 @@ int chunk_check(char* letter, int letter_length) {
         }
     }
 
-    printf("letter length: %d\n", letter_length - 1);
-    printf("chunks to score: %d\n", chunks_to_score);
-    printf("chunks with spaces: %d    score from spacechunks:    %d\n", chunks_with_spaces, chunks_with_spaces * 20);
-    // score += 20 * chunks_with_spaces;
-    printf("chunks without spaces: %d\n", chunks_to_score - chunks_with_spaces);
     score -= 20 * (chunks_to_score - chunks_with_spaces);
 
-    printf("score from check 7: %d\n", score);
     return score;
 }
 
