@@ -168,6 +168,32 @@ int runon_check(char letter[], int letter_length) {
     return score;
 }
 
+int chunk_check(char* letter, int letter_length) {
+    int score = 0;
+    int chunks_with_spaces = 0;
+    int chunks_to_score = (letter_length - 1) / 32;
+
+    for (int i = 0; i < chunks_to_score; i++) {
+        for (int j = 0; j < 32; j++) {
+            int idx = (32 * i) + j;
+            if (letter[idx] == ' ') {
+                chunks_with_spaces++;
+                break;
+            }
+        }
+    }
+
+    printf("letter length: %d\n", letter_length - 1);
+    printf("chunks to score: %d\n", chunks_to_score);
+    printf("chunks with spaces: %d    score from spacechunks:    %d\n", chunks_with_spaces, chunks_with_spaces * 20);
+    // score += 20 * chunks_with_spaces;
+    printf("chunks without spaces: %d\n", chunks_to_score - chunks_with_spaces);
+    score -= 20 * (chunks_to_score - chunks_with_spaces);
+
+    printf("score from check 7: %d\n", score);
+    return score;
+}
+
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += punc_and_cap(letter, letter_length);
@@ -175,6 +201,7 @@ int score_letter(char* letter, int letter_length) {
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
     final_score += runon_check(letter, letter_length);
+    final_score += chunk_check(letter, letter_length);
 
     return final_score;
 }
