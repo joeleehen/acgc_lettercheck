@@ -20,7 +20,7 @@ The [Animal Crossing Decompilation Team](https://github.com/ACreTeam) for doing 
 # TODO
 ## Priority
 - [x] Check 1) Punctuation and Capitalization
-- [ ] Check 2) Trigram Check
+- [x] Check 2) Trigram Check
 - [x] Check 3) Starting Capital Check
 - [x] Check 4) Repeating Characters Check
 - [x] Check 5) Space Ratio Check
