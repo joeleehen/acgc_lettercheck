@@ -36,6 +36,7 @@
 #include <stdlib.h>
 
 #include "trigram_table.h"
+#include "ascii.h"
 
 int is_punc(char c) {
     if (c == '.' || c == '?' || c == '!') return 1;
@@ -85,9 +86,39 @@ int is_trigram(char* str) {
 
     for (int i = 0; i < 26; i++) {
         int* str_table = trigram_table[i].double_letter_table;
+
+        if (char0 == trigram_table[i].lowercase_char || char0 == trigram_table[i].uppercase_char) {
+            // search through a letter's str table to find valid trigram endings
+            /* NOTE: string tables in-game are missing control codes to halt iteration. To
+            approximate this behavior, we only inlude a stop character at the bottom of the
+            z_table.*/
+            for (str_table; str_table[0] != CHAR_CONTROL_CODE; str_table += 2) {
+                if (char1 == str_table[0] && char2 == str_table[1]) return 1;
+            }
+        }
     }
 
-    return 1;
+    return 0;
+}
+
+int trigram_check(char* letter, int letter_length) {
+    int count = 0;
+
+    int i = 0;
+    while (i < letter_length - 3) {
+        char triplet[3];
+        triplet[0] = letter[i];
+        triplet[1] = letter[i + 1];
+        triplet[2] = letter[i + 2];
+        if (is_trigram(triplet) > 0) {
+            count++;
+            i += 3;
+        } else {
+            i ++;
+        }
+    }
+
+    return count * 3;
 }
 
 int start_capital_check(char* letter, int letter_length) {
@@ -207,6 +238,7 @@ int chunk_check(char* letter, int letter_length) {
 int score_letter(char* letter, int letter_length) {
     int final_score = 0;
     final_score += punc_and_cap(letter, letter_length);
+    final_score += trigram_check(letter, letter_length);
     final_score += start_capital_check(letter, letter_length);
     final_score += repeating_char_check(letter, letter_length);
     final_score += space_ratio_check(letter, letter_length);
