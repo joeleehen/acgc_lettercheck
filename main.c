@@ -74,6 +74,7 @@ int punc_and_cap(char* letter, int letter_length) {
         if (is_punc(letter[letter_length - 2])) score += 20;
     }
 
+    printf("Score from Check A: %d\n", score);
     return score;
 }
 
@@ -101,6 +102,18 @@ int is_trigram(char* str) {
     return 0;
 }
 
+int get_next_word_idx(char* letter, int letter_length, int current_idx) {
+    int idx = current_idx + 1;
+    
+    while (idx < letter_length - 1) {
+        if (letter[idx] == ' ') {
+            idx++;
+            break;
+        } else idx++;
+    }
+    return idx;
+}
+
 int trigram_check(char* letter, int letter_length) {
     int count = 0;
 
@@ -111,13 +124,19 @@ int trigram_check(char* letter, int letter_length) {
         triplet[1] = letter[i + 1];
         triplet[2] = letter[i + 2];
         if (is_trigram(triplet) > 0) {
+            printf("  found trigram: %s\n", triplet);
             count++;
-            i += 3;
+            // i = get_next_word_idx(letter, letter_length, i);
+            // printf("  moving to %c\n", letter[i]);
         } else {
-            i ++;
+            printf("  %s is not a trigram\n", triplet);
         }
+        i = get_next_word_idx(letter, letter_length, i);
+        printf("  moving to %c\n", letter[i]);
     }
 
+    printf("Score from Check B: %d\n", count * 3);
+    printf("  (found %d trigrams)\n", count);
     return count * 3;
 }
 
@@ -132,6 +151,7 @@ int start_capital_check(char* letter, int letter_length) {
         }
     }
 
+    printf("Score from Check C: %d\n", score);
     return score;
 }
 
@@ -141,11 +161,13 @@ int repeating_char_check(char* letter, int letter_length) {
     while (idx < letter_length - 3) {
         if (letter[idx] == letter[idx + 1]) {
             if (letter[idx] == letter[idx + 2]) {
+                printf("Score from Check D: -50\n");
                 return -50;
             } else idx += 2;
         } else idx += 1;
     }
  
+    printf("Score from Check D: 0\n");
     return 0;
 }
 
@@ -166,6 +188,7 @@ int space_ratio_check(char* letter, int letter_length) {
     int space_ratio = (spaces * 100) / nonspaces;
     if (space_ratio >= 20) score = 20;
 
+    printf("Score from Check E: %d\n", score);
     return score;
 }
 
@@ -191,27 +214,28 @@ int runon_check(char* letter, int letter_length) {
 
     // ...check after each punctuation mark for 75 characters without punctuation
     int i = 0;
-    printf("checking for run on sentence...\n");
     while (i < letter_length) {
         if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
-            printf("found punctuation at index %d\n", i);
             // if there aren't 75 characters after punctuation, no deduction
             if (i + 75 > letter_length - 2) {
-                printf("there aren't 75 characters left to examine\n");
                 return 0;
             }
             int j = i + 1;
             for (j; j < i + 76; j++) {
                 if (letter[j] == '.' || letter[j] == '!' || letter[j] == '?') {
-                    printf("found another punctuation mark at index %d", j);
                     i = j;
                     break;
                 }
             }
-            if (i != j) return -150;
+            if (i != j) {
+                printf("Score from Check F: -150\n");
+                return -150;
+            }
             // return -150;
         } else i++;
     }
+
+    printf("Score from Check F: %d\n", score);
     return score;
 }
 
@@ -232,6 +256,7 @@ int chunk_check(char* letter, int letter_length) {
 
     score -= 20 * (chunks_to_score - chunks_with_spaces);
 
+    printf("Score from Check G: %d\n", score);
     return score;
 }
 
