@@ -124,19 +124,12 @@ int trigram_check(char* letter, int letter_length) {
         triplet[1] = letter[i + 1];
         triplet[2] = letter[i + 2];
         if (is_trigram(triplet) > 0) {
-            printf("  found trigram: %s\n", triplet);
             count++;
-            // i = get_next_word_idx(letter, letter_length, i);
-            // printf("  moving to %c\n", letter[i]);
-        } else {
-            printf("  %s is not a trigram\n", triplet);
         }
         i = get_next_word_idx(letter, letter_length, i);
-        printf("  moving to %c\n", letter[i]);
     }
 
     printf("Score from Check B: %d\n", count * 3);
-    printf("  (found %d trigrams)\n", count);
     return count * 3;
 }
 
@@ -190,7 +183,6 @@ int space_ratio_check(char* letter, int letter_length) {
     if (space_ratio >= 20) score = 20;
 
     printf("Score from Check E: %d\n", score);
-    printf("  spaces: %d    nonspaces: %d    space ratio: %d\n", spaces, nonspaces, space_ratio);
     return score;
 }
 
@@ -209,10 +201,16 @@ int has_punctuation(char* letter, int letter_length) {
 int runon_check(char* letter, int letter_length) {
     int score = 0;
 
-    if (letter_length < 75) return 0;
+    if (letter_length < 75) {
+        printf("Score from Check F: 0\n");
+        return 0;
+    }
 
     // if a letter has at least one punctuation mark before the final 75 characters...
-    if (!has_punctuation(letter, letter_length)) return 0;
+    if (!has_punctuation(letter, letter_length)) {
+        printf("Score from Check F: 0\n");
+        return 0;
+    }
 
     // ...check after each punctuation mark for 75 characters without punctuation
     int i = 0;
@@ -220,6 +218,7 @@ int runon_check(char* letter, int letter_length) {
         if (letter[i] == '.' || letter[i] == '!' || letter[i] == '?') {
             // if there aren't 75 characters after punctuation, no deduction
             if (i + 75 > letter_length - 2) {
+                printf("Score from Check F: 0\n");
                 return 0;
             }
             int j = i + 1;
