@@ -35,6 +35,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "trigram_table.h"
+
 int is_punc(char c) {
     if (c == '.' || c == '?' || c == '!') return 1;
     return 0;
@@ -72,6 +74,20 @@ int punc_and_cap(char* letter, int letter_length) {
     }
 
     return score;
+}
+
+extern struct string_table trigram_table[];
+
+int is_trigram(char* str) {
+    int char0 = (int)str[0];
+    int char1 = (int)str[1];
+    int char2 = (int)str[2];
+
+    for (int i = 0; i < 26; i++) {
+        int* str_table = trigram_table[i].double_letter_table;
+    }
+
+    return 1;
 }
 
 int start_capital_check(char* letter, int letter_length) {

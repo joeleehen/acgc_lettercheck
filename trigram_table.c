@@ -3,7 +3,7 @@
 #include "ascii.h"
 #include "trigram_table.h"
 
-static u8 a_table[] = {
+static int a_table[] = {
   CHAR_b, CHAR_l,
   CHAR_b, CHAR_o,
   CHAR_b, CHAR_r,
@@ -64,7 +64,7 @@ static u8 a_table[] = {
 
 };
 
-status u8 b_table[] = {
+static int b_table[] = {
   CHAR_a, CHAR_b,
   CHAR_a, CHAR_c,
   CHAR_a, CHAR_d,
@@ -116,7 +116,7 @@ status u8 b_table[] = {
   CHAR_y, CHAR_SPACE,
 };
 
-static u8 c_table[] = {
+static int c_table[] = {
   CHAR_a, CHAR_k,
   CHAR_a, CHAR_l,
   CHAR_a, CHAR_m,
@@ -163,7 +163,7 @@ static u8 c_table[] = {
   CHAR_u, CHAR_t,
 };
 
-static u8 d_table[] = {
+static int d_table[] = {
   CHAR_a, CHAR_d,
   CHAR_a, CHAR_i,
   CHAR_a, CHAR_m,
@@ -215,7 +215,7 @@ static u8 d_table[] = {
   CHAR_u, CHAR_t,
 };
 
-static u8 e_table[] = {
+static int e_table[] = {
     CHAR_a, CHAR_c,
     CHAR_a, CHAR_r,
     CHAR_a, CHAR_s,
@@ -246,7 +246,7 @@ static u8 e_table[] = {
     CHAR_y, CHAR_e,
 };
 
-static u8 f_table[] = {
+static int f_table[] = {
     CHAR_a, CHAR_c,
     CHAR_a, CHAR_i,
     CHAR_a, CHAR_l,
@@ -288,7 +288,7 @@ static u8 f_table[] = {
     CHAR_u, CHAR_t,
 };
 
-static u8 g_table[] = {
+static int g_table[] = {
     CHAR_a, CHAR_i,
     CHAR_a, CHAR_m,
     CHAR_a, CHAR_r,
@@ -317,7 +317,7 @@ static u8 g_table[] = {
     CHAR_u, CHAR_n,
 };
 
-static u8 h_table[] = {
+static int h_table[] = {
     CHAR_a, CHAR_b,
     CHAR_a, CHAR_d,
     CHAR_a, CHAR_i,
@@ -356,7 +356,7 @@ static u8 h_table[] = {
     CHAR_u, CHAR_s,
 };
 
-static u8 i_table[] = {
+static int i_table[] = {
     CHAR_SPACE, CHAR_SPACE,
     CHAR_c, CHAR_e,
     CHAR_d, CHAR_e,
@@ -378,7 +378,7 @@ static u8 i_table[] = {
     CHAR_t, CHAR_s,
 };
 
-static u8 j_table[] = {
+static int j_table[] = {
     CHAR_a, CHAR_n,
     CHAR_a, CHAR_p,
     CHAR_o, CHAR_b,
@@ -390,7 +390,7 @@ static u8 j_table[] = {
     CHAR_u, CHAR_s,
 };
 
-static u8 k_table[] = {
+static int k_table[] = {
     CHAR_e, CHAR_e,
     CHAR_e, CHAR_p,
     CHAR_e, CHAR_y,
@@ -403,7 +403,7 @@ static u8 k_table[] = {
     CHAR_n, CHAR_o,
 };
 
-static u8 l_table[] = {
+static int l_table[] = {
     CHAR_a, CHAR_b,
     CHAR_a, CHAR_d,
     CHAR_a, CHAR_i,
@@ -446,7 +446,7 @@ static u8 l_table[] = {
     CHAR_y, CHAR_i,
 };
 
-static u8 m_table[] = {
+static int m_table[] = {
     CHAR_a, CHAR_c,
     CHAR_a, CHAR_d,
     CHAR_a, CHAR_g,
@@ -487,7 +487,7 @@ static u8 m_table[] = {
     CHAR_y, CHAR_s,
 };
 
-static u8 n_table[] = {
+static int n_table[] = {
     CHAR_a, CHAR_m,
     CHAR_a, CHAR_r,
     CHAR_a, CHAR_t,
@@ -514,7 +514,7 @@ static u8 n_table[] = {
     CHAR_u, CHAR_m,
 };
 
-static u8 o_table[] = {
+static int o_table[] = {
     CHAR_b, CHAR_j,
     CHAR_APOSTROPHE, CHAR_c,
     CHAR_c, CHAR_t,
@@ -542,7 +542,7 @@ static u8 o_table[] = {
     CHAR_w, CHAR_n,
 };
 
-static u8 p_table[] = {
+static int p_table[] = {
     CHAR_a, CHAR_c,
     CHAR_a, CHAR_g,
     CHAR_a, CHAR_i,
@@ -583,13 +583,13 @@ static u8 p_table[] = {
     CHAR_u, CHAR_t,
 };
 
-static u8 q_table[] = {
+static int q_table[] = {
     CHAR_u, CHAR_a,
     CHAR_u, CHAR_e,
     CHAR_u, CHAR_i,
 };
 
-static u8 r_table[] = {
+static int r_table[] = {
     CHAR_a, CHAR_c,
     CHAR_a, CHAR_d,
     CHAR_a, CHAR_i,
@@ -626,7 +626,7 @@ static u8 r_table[] = {
     CHAR_u, CHAR_s,
 };
 
-static u8 s_table[] = {
+static int s_table[] = {
     CHAR_a, CHAR_d,
     CHAR_a, CHAR_f,
     CHAR_a, CHAR_i,
@@ -716,7 +716,7 @@ static u8 s_table[] = {
     CHAR_y, CHAR_s,
 };
 
-static u8 t_table[] = {
+static int t_table[] = {
     CHAR_a, CHAR_b,
     CHAR_a, CHAR_k,
     CHAR_a, CHAR_l,
@@ -770,7 +770,7 @@ static u8 t_table[] = {
     CHAR_y, CHAR_p,
 };
 
-static u8 u_table[] = {
+static int u_table[] = {
     CHAR_n, CHAR_a,
     CHAR_n, CHAR_c,
     CHAR_n, CHAR_d,
@@ -784,7 +784,7 @@ static u8 u_table[] = {
     CHAR_s, CHAR_u,
 };
 
-static u8 v_table[] = {
+static int v_table[] = {
     CHAR_a, CHAR_l,
     CHAR_a, CHAR_r,
     CHAR_e, CHAR_g,
@@ -797,7 +797,7 @@ static u8 v_table[] = {
     CHAR_o, CHAR_t,
 };
 
-static u8 w_table[] = {
+static int w_table[] = {
     CHAR_a, CHAR_i,
     CHAR_a, CHAR_k,
     CHAR_a, CHAR_l,
@@ -840,11 +840,11 @@ static u8 w_table[] = {
     CHAR_r, CHAR_o,
 };
 
-static u8 x_table[] = {
+static int x_table[] = {
     CHAR_m, CHAR_a,
 };
 
-static u8 y_table[] = {
+static int y_table[] = {
     CHAR_a, CHAR_r,
     CHAR_e, CHAR_a,
     CHAR_e, CHAR_l,
@@ -854,7 +854,36 @@ static u8 y_table[] = {
     CHAR_o, CHAR_u,
 };
 
-static u8 z_table[] = {
+static int z_table[] = {
     CHAR_e, CHAR_r,
     CHAR_CONTROL_CODE, 0,
+};
+
+string_table trigram_table[26] = {
+    { CHAR_a, CHAR_A, a_table },
+    { CHAR_b, CHAR_B, b_table },
+    { CHAR_c, CHAR_C, c_table },
+    { CHAR_d, CHAR_D, d_table },
+    { CHAR_e, CHAR_E, e_table },
+    { CHAR_f, CHAR_F, f_table },
+    { CHAR_g, CHAR_G, g_table },
+    { CHAR_h, CHAR_H, h_table },
+    { CHAR_i, CHAR_I, i_table },
+    { CHAR_j, CHAR_J, j_table },
+    { CHAR_k, CHAR_K, k_table },
+    { CHAR_l, CHAR_L, l_table },
+    { CHAR_m, CHAR_M, n_table },
+    { CHAR_n, CHAR_N, m_table },
+    { CHAR_o, CHAR_O, o_table },
+    { CHAR_p, CHAR_P, p_table },
+    { CHAR_q, CHAR_Q, q_table },
+    { CHAR_r, CHAR_R, r_table },
+    { CHAR_s, CHAR_S, s_table },
+    { CHAR_t, CHAR_T, t_table },
+    { CHAR_u, CHAR_U, u_table },
+    { CHAR_v, CHAR_V, v_table },
+    { CHAR_w, CHAR_W, w_table },
+    { CHAR_x, CHAR_X, x_table },
+    { CHAR_y, CHAR_Y, y_table },
+    { CHAR_z, CHAR_Z, z_table },
 };

@@ -1,6 +1,6 @@
 typedef struct string_table {
-    u8 lowercase_char;
-    u8 uppercase_char;
+    int lowercase_char;
+    int uppercase_char;
 
-    u8* trigram_table;
+    int* double_letter_table;
 } string_table;
