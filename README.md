@@ -19,13 +19,13 @@ The [Animal Crossing Decompilation Team](https://github.com/ACreTeam) for doing 
 
 # TODO
 ## Priority
-- [ ] Check 1) Punctuation and Capitalization
-- [ ] Check 2) Trigram Check
+- [x] Check 1) Punctuation and Capitalization
+- [x] Check 2) Trigram Check
 - [x] Check 3) Starting Capital Check
 - [x] Check 4) Repeating Characters Check
 - [x] Check 5) Space Ratio Check
 - [x] Check 6) Run-on Sentence Check
-- [ ] Check 7) 32-Character Check
+- [x] Check 7) 32-Character Check
 - [x] 192 Character limit when reading input file
 ## Later Down the Road
 - [ ] (?)Replicate trigram table bug to match in-game behavior
