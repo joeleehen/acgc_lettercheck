@@ -177,10 +177,11 @@ int space_ratio_check(char* letter, int letter_length) {
     int nonspaces = 0;
 
     for (int i = 0; i < letter_length; i++) {
-        if ((int)letter[i] == 32) spaces++;
+        if ((int)letter[i] == CHAR_SPACE) spaces++;
         else nonspaces++;
     }
 
+    nonspaces--; // do not count terminator as a nonspace
     if (nonspaces == 0) {
         return score;
     }
@@ -189,6 +190,7 @@ int space_ratio_check(char* letter, int letter_length) {
     if (space_ratio >= 20) score = 20;
 
     printf("Score from Check E: %d\n", score);
+    printf("  spaces: %d    nonspaces: %d    space ratio: %d\n", spaces, nonspaces, space_ratio);
     return score;
 }
 
