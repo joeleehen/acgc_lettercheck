@@ -1,61 +1,46 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <gtk/gtk.h>
 
 #include "trigram_table.h"
 #include "ascii.h"
 #include "lettercheck.h"
 
+GtkWidget *txt;
+
+void end_program(GtkWidget *wid, gpointer ptr) {
+    gtk_main_quit();
+}
+
+void get_letter_score(GtkWidget *wid, gpointer ptr) {
+    char buffer[20];
+    char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
+    int letter_score = score_letter(letter, strlen(letter));
+    sprintf(buffer, "Letter score: %d", letter_score);
+    gtk_label_set_text(GTK_LABEL(ptr), buffer);
+}
+
 int main(int argc, char *argv[])
 {
-    char *buffer;
-    FILE *letter_file;
-    int letter_score = 0;
+    gtk_init(&argc, &argv);
+    GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    g_signal_connect(win, "delete_event", G_CALLBACK(end_program), NULL);
 
-    if (argc == 1) {
-        printf("ERROR: no input file specified.\n");
-        return 1;
-    }
+    GtkWidget *box = gtk_vbox_new(FALSE, 10);
+    GtkWidget *title_label = gtk_label_new("ACGC Letter Grader");
+    txt = gtk_entry_new();
+    GtkWidget *score_button = gtk_button_new_with_label("Score Letter");
+    GtkWidget *score_label = gtk_label_new("Letter score:");
+    g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
 
-    char * filename = argv[1];
- 
-    letter_file = fopen(filename, "rb");
-    if (letter_file == NULL) {
-        printf("ERROR: file %s not found!", filename);
-        return 1;
-    }
+    gtk_box_pack_start(GTK_BOX(box), title_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), txt, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), score_button, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), score_label, FALSE, FALSE, 0);
+    gtk_container_add(GTK_CONTAINER(win), box);
 
-    fseek(letter_file, 0, SEEK_END);
-    long letter_size = ftell(letter_file);
-    if (letter_size > 192) letter_size = 192;
-    fseek(letter_file, 0, SEEK_SET);
-    buffer = (char *)malloc(letter_size);
-
-    if (buffer == NULL) {
-        printf("ERROR: couldn't read file %s into memory!\n", filename);
-        return 1;
-    }
-
-    fread(buffer, 1, letter_size, letter_file);
-
-    if (letter_size == 192) {
-        letter_size++;
-        buffer = realloc(buffer, letter_size);
-        buffer[192] = '\0';
-    }
-
-    if (!buffer) {
-        printf("ERROR: could not read file into memory buffer!");
-        return 1;
-    }
-
-    letter_score = score_letter(buffer, letter_size);
-
-    printf("letter score: %d\n", letter_score);
-
-
-    free(buffer);
-    fclose(letter_file);
-
+    gtk_widget_show_all(win);
+    gtk_main();
     return 0;
 }
