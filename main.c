@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
 {
     gtk_init(&argc, &argv);
     GtkWidget *win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+    gtk_window_set_default_size(GTK_WINDOW(win), 600, 700);
     g_signal_connect(win, "delete_event", G_CALLBACK(end_program), NULL);
 
     GtkWidget *box = gtk_vbox_new(FALSE, 10);
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
     GtkWidget *score_label = gtk_label_new("Letter score:");
     g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
     g_signal_connect(txt, "activate", G_CALLBACK(get_letter_score), score_label);
+    // g_signal_connect(txt, "key-press-event", G_CALLBACK(get_letter_score), score_label);
 
     gtk_box_pack_start(GTK_BOX(box), title_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), txt, FALSE, FALSE, 0);
