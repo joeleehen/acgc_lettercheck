@@ -8,6 +8,8 @@
 #include "lettercheck.h"
 
 GtkWidget *txt;
+letter_scores scores;
+letter_scores *score_ptr = &scores;
 
 void end_program(GtkWidget *wid, gpointer ptr) {
     gtk_main_quit();
@@ -16,8 +18,8 @@ void end_program(GtkWidget *wid, gpointer ptr) {
 void get_letter_score(GtkWidget *wid, gpointer ptr) {
     char buffer[20];
     char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
-    int letter_score = score_letter(letter, strlen(letter));
-    sprintf(buffer, "Letter score: %d", letter_score);
+    int letter_score = score_letter(letter, strlen(letter), score_ptr);
+    sprintf(buffer, "Letter score: %d", score_ptr->total_score);
     gtk_label_set_text(GTK_LABEL(ptr), buffer);
 }
 

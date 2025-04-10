@@ -1,3 +1,14 @@
+typedef struct letter_scores {
+    int checkA;
+    int checkB;
+    int checkC;
+    int checkD;
+    int checkE;
+    int checkF;
+    int checkG;
+    int total_score;
+} letter_scores;
+
 extern int is_punc(char c);
 extern int adjacent_check(char* letter, int letter_length, int idx);
 extern int punc_and_cap(char* letter, int letter_length);
@@ -10,4 +21,4 @@ extern int space_ratio_check(char* letter, int letter_length);
 extern int has_punctuation(char* letter, int letter_length);
 extern int runon_check(char* letter, int letter_length);
 extern int chunk_check(char* letter, int letter_length);
-extern int score_letter(char* letter, int letter_length);
+extern int score_letter(char* letter, int letter_length, letter_scores* letter_scores);

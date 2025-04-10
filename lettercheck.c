@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "lettercheck.h"
 #include "trigram_table.h"
 #include "ascii.h"
 
@@ -228,15 +229,20 @@ int chunk_check(char* letter, int letter_length) {
     return score;
 }
 
-int score_letter(char* letter, int letter_length) {
-    int final_score = 0;
-    final_score += punc_and_cap(letter, letter_length);
-    final_score += trigram_check(letter, letter_length);
-    final_score += start_capital_check(letter, letter_length);
-    final_score += repeating_char_check(letter, letter_length);
-    final_score += space_ratio_check(letter, letter_length);
-    final_score += runon_check(letter, letter_length);
-    final_score += chunk_check(letter, letter_length);
+int score_letter(char* letter, int letter_length, letter_scores* scores) {
+    scores->checkA = punc_and_cap(letter, letter_length);
+    scores->checkB = trigram_check(letter, letter_length);
+    scores->checkC = start_capital_check(letter, letter_length);
+    scores->checkD = repeating_char_check(letter, letter_length);
+    scores->checkE = space_ratio_check(letter, letter_length);
+    scores->checkF = runon_check(letter, letter_length);
+    scores->checkG = chunk_check(letter, letter_length);
+
+    // FIXME: this is disgusting
+    int final_score = scores->checkA + scores->checkB + scores->checkC
+        + scores->checkD + scores->checkE + scores->checkF + scores->checkG;
+
+    scores->total_score = final_score;
 
     return final_score;
 }
