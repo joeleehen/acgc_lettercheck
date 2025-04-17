@@ -106,6 +106,9 @@ int start_capital_check(char* letter, int letter_length) {
 
     for (int i = 0; i < letter_length; i++) {
         int ascii = (int)letter[i];
+        if (ascii >= 97 && ascii <= 122) {
+            break;
+        }
         if (ascii >= 65 && ascii <= 90) {
             score = 20;
             break;
