@@ -30,4 +30,4 @@ The [Animal Crossing Decompilation Team](https://github.com/ACreTeam) for doing 
 ## Later Down the Road
 - [ ] (?)Replicate trigram table bug to match in-game behavior
 - [ ] `ncurses` terminal interface
-- [ ] `GTK` GUI
+- [x] `GTK` GUI
