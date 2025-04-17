@@ -23,11 +23,25 @@ void end_program(GtkWidget *wid, gpointer ptr) {
     gtk_main_quit();
 }
 
-// NOTE: this is incredibly stupid implementation
-void update_check_labels(int check_score, GtkWidget *lbl, char check_char) {
-    char buffer[25];
-    sprintf(buffer, "Check %c: %d points", check_char, check_score);
-    gtk_label_set_text(GTK_LABEL(lbl), buffer);
+void update_check_label(int check_score, GtkWidget *lbl) {
+    char buffer[15];
+    char *markup_formatted;
+
+    sprintf(buffer, "%d points", check_score);
+
+    if (check_score > 0 ) {
+        char *format = "<span color=\"green\">\%s</span>";
+        markup_formatted = g_markup_printf_escaped(format, buffer);
+    } else if (check_score < 0) {
+        char *format = "<span color=\"red\">\%s</span>";
+        markup_formatted = g_markup_printf_escaped(format, buffer);
+    } else {
+        char *format = "<span>\%s</span>";
+        markup_formatted = g_markup_printf_escaped(format, buffer);
+    }
+
+    gtk_label_set_markup(GTK_LABEL(lbl), markup_formatted);
+    g_free(markup_formatted);
 }
 
 void get_letter_score(GtkWidget *wid, gpointer ptr) {
@@ -37,13 +51,13 @@ void get_letter_score(GtkWidget *wid, gpointer ptr) {
     sprintf(buffer, "Letter score: %d", score_ptr->total_score);
     gtk_label_set_text(GTK_LABEL(ptr), buffer);
 
-    update_check_labels(score_ptr->checkA, check_a_label, 'A');
-    update_check_labels(score_ptr->checkB, check_b_label, 'B');
-    update_check_labels(score_ptr->checkC, check_c_label, 'C');
-    update_check_labels(score_ptr->checkD, check_d_label, 'D');
-    update_check_labels(score_ptr->checkE, check_e_label, 'E');
-    update_check_labels(score_ptr->checkF, check_f_label, 'F');
-    update_check_labels(score_ptr->checkG, check_g_label, 'G');
+    update_check_label(score_ptr->checkA, check_a_label);
+    update_check_label(score_ptr->checkB, check_b_label);
+    update_check_label(score_ptr->checkC, check_c_label);
+    update_check_label(score_ptr->checkD, check_d_label);
+    update_check_label(score_ptr->checkE, check_e_label);
+    update_check_label(score_ptr->checkF, check_f_label);
+    update_check_label(score_ptr->checkG, check_g_label);
 }
 
 int main(int argc, char *argv[])
@@ -59,22 +73,43 @@ int main(int argc, char *argv[])
     GtkWidget *score_button = gtk_button_new_with_label("Score Letter");
     GtkWidget *score_label = gtk_label_new("Letter score:");
 
-    check_a_label = gtk_label_new("Check A: 0 points");
-    check_b_label = gtk_label_new("Check B: 0 points");
-    check_c_label = gtk_label_new("Check C: 0 points");
-    check_d_label = gtk_label_new("Check D: 0 points");
-    check_e_label = gtk_label_new("Check E: 0 points");
-    check_f_label = gtk_label_new("Check F: 0 points");
-    check_g_label = gtk_label_new("Check G: 0 points");
+    GtkWidget *frame_a = gtk_frame_new("Check A");
+    check_a_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_a), check_a_label);
+
+    GtkWidget *frame_b = gtk_frame_new("Check B");
+    check_b_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_b), check_b_label);
+
+    GtkWidget *frame_c = gtk_frame_new("Check C");
+    check_c_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_c), check_c_label);
+
+    GtkWidget *frame_d = gtk_frame_new("Check D");
+    check_d_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_d), check_d_label);
+
+    GtkWidget *frame_e = gtk_frame_new("Check E");
+    check_e_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_e), check_e_label);
+
+    GtkWidget *frame_f = gtk_frame_new("Check F");
+    check_f_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_f), check_f_label);
+
+    GtkWidget *frame_g = gtk_frame_new("Check G");
+    check_g_label = gtk_label_new("0 points");
+    gtk_container_add(GTK_CONTAINER(frame_g), check_g_label);
+
     GtkWidget *checkbox = gtk_hbox_new(FALSE, 20);
 
-    gtk_box_pack_start(GTK_BOX(checkbox), check_a_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_b_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_c_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_d_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_e_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_f_label, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(checkbox), check_g_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_a, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_b, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_c, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_d, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_e, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_f, TRUE, FALSE, 5);
+    gtk_box_pack_start(GTK_BOX(checkbox), frame_g, TRUE, FALSE, 5);
 
     g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
     g_signal_connect(txt, "activate", G_CALLBACK(get_letter_score), score_label);

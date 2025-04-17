@@ -244,6 +244,8 @@ int score_letter(char* letter, int letter_length, letter_scores* scores) {
 
     scores->total_score = final_score;
 
+    printf("\n");
+
     return final_score;
 }
 
