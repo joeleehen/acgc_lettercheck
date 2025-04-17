@@ -39,7 +39,7 @@ int punc_and_cap(char* letter, int letter_length) {
 
     // check last char for punctuation
     if (letter_length < 193) {
-        if (is_punc(letter[letter_length - 2])) score += 20;
+        if (is_punc(letter[letter_length - 1])) score += 20;
     }
 
     printf("Score from Check A: %d\n", score);
