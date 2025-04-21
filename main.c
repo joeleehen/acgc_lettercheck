@@ -44,7 +44,7 @@ void update_check_label(int check_score, GtkWidget *lbl) {
     g_free(markup_formatted);
 }
 
-void get_letter_score(GtkWidget *wid, gpointer ptr) {
+gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     char buffer[20];
     char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
     int letter_score = score_letter(letter, strlen(letter), score_ptr);
@@ -58,6 +58,8 @@ void get_letter_score(GtkWidget *wid, gpointer ptr) {
     update_check_label(score_ptr->checkE, check_e_label);
     update_check_label(score_ptr->checkF, check_f_label);
     update_check_label(score_ptr->checkG, check_g_label);
+
+    return FALSE;
 }
 
 int main(int argc, char *argv[])
@@ -111,9 +113,9 @@ int main(int argc, char *argv[])
     gtk_box_pack_start(GTK_BOX(checkbox), frame_f, TRUE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(checkbox), frame_g, TRUE, FALSE, 5);
 
-    g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
-    g_signal_connect(txt, "activate", G_CALLBACK(get_letter_score), score_label);
-    // g_signal_connect(txt, "key-press-event", G_CALLBACK(get_letter_score), score_label);
+    // g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
+    // g_signal_connect(txt, "activate", G_CALLBACK(get_letter_score), score_label);
+    g_signal_connect(txt, "key-press-event", G_CALLBACK(get_letter_score), score_label);
 
     gtk_box_pack_start(GTK_BOX(box), title_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), txt, FALSE, FALSE, 0);
