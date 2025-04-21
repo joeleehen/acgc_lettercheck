@@ -89,8 +89,7 @@ gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
     int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
 
-    if (letter_length + 1 > 193 && event->keyval != CHAR_BACKSPACE) return TRUE;
-    if (letter_length + 1 > 193) {
+    if (letter_length + 1 > 192) {
         if (event->keyval != CHAR_BACKSPACE) return TRUE;
     }
 
