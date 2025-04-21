@@ -45,13 +45,30 @@ void update_check_label(int check_score, GtkWidget *lbl) {
     g_free(markup_formatted);
 }
 
-char * get_letter_text(GtkWidget *wid) {
+char * get_letter_text(GtkWidget *wid, int key_pressed) {
     GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
     int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
-    printf("\n letter length: %d\n", letter_length);
+    // setting the start iter at every invocation is redundant but should have a negligible performance impact
+    gtk_text_buffer_get_iter_at_offset(letter_buffer, &start, 0);
 
     /* NOTE: this assumes all characters are a single byte long. this glosses over some 
     multibyte UTF-8 skullduggery but is inaccurate to the original game.*/
+
+    if (key_pressed == CHAR_BACKSPACE) {
+        printf("received backspace\n");
+        gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, letter_length - 1);
+        gtk_text_buffer_get_iter_at_offset(letter_buffer, &start, 0);
+        char* letter = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(letter_buffer), &start, &end, FALSE);
+        return letter;
+    }
+
+    gunichar char_pressed = gdk_keyval_to_unicode(key_pressed);
+
+    if (!g_unichar_isprint(char_pressed) || letter_length > 193) {
+        gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, -1);
+        char *letter = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(letter_buffer), &start, &end, FALSE);
+        return letter;
+    }
 
     if (letter_length > 192) {
         gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, 192);
@@ -69,9 +86,15 @@ char * get_letter_text(GtkWidget *wid) {
 
 gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     char buffer[20];
-    // char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
-    char* letter = get_letter_text(txt);
-    // GtkTextBuffer *letter = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txt));
+    GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
+    int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
+
+    if (letter_length + 1 > 193 && event->keyval != CHAR_BACKSPACE) return TRUE;
+    if (letter_length + 1 > 193) {
+        if (event->keyval != CHAR_BACKSPACE) return TRUE;
+    }
+
+    char* letter = get_letter_text(txt, event->keyval);
     int letter_score = score_letter(letter, strlen(letter), score_ptr);
     sprintf(buffer, "Letter score: %d", score_ptr->total_score);
     gtk_label_set_text(GTK_LABEL(ptr), buffer);
@@ -99,6 +122,8 @@ int main(int argc, char *argv[])
     // txt = gtk_entry_new();
     txt = gtk_text_view_new();
     gtk_widget_set_size_request(txt, 300, 400);
+    gtk_text_view_set_wrap_mode(GTK_TEXT_VIEW(txt), GTK_WRAP_WORD);
+
     GtkWidget *score_label = gtk_label_new("Letter score:");
 
     GtkWidget *frame_a = gtk_frame_new("Check A");
