@@ -72,7 +72,6 @@ int main(int argc, char *argv[])
     GtkWidget *box = gtk_vbox_new(FALSE, 10);
     GtkWidget *title_label = gtk_label_new("ACGC Letter Grader");
     txt = gtk_entry_new();
-    GtkWidget *score_button = gtk_button_new_with_label("Score Letter");
     GtkWidget *score_label = gtk_label_new("Letter score:");
 
     GtkWidget *frame_a = gtk_frame_new("Check A");
@@ -113,13 +112,10 @@ int main(int argc, char *argv[])
     gtk_box_pack_start(GTK_BOX(checkbox), frame_f, TRUE, FALSE, 5);
     gtk_box_pack_start(GTK_BOX(checkbox), frame_g, TRUE, FALSE, 5);
 
-    // g_signal_connect(score_button, "clicked", G_CALLBACK(get_letter_score), score_label);
-    // g_signal_connect(txt, "activate", G_CALLBACK(get_letter_score), score_label);
     g_signal_connect(txt, "key-press-event", G_CALLBACK(get_letter_score), score_label);
 
     gtk_box_pack_start(GTK_BOX(box), title_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), txt, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(box), score_button, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), score_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), checkbox, FALSE, FALSE, 0);
     gtk_container_add(GTK_CONTAINER(win), box);
