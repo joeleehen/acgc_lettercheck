@@ -15,6 +15,7 @@ GtkWidget *check_d_label;
 GtkWidget *check_e_label;
 GtkWidget *check_f_label;
 GtkWidget *check_g_label;
+GtkTextIter start, end;
 
 letter_scores scores;
 letter_scores *score_ptr = &scores;
@@ -44,9 +45,33 @@ void update_check_label(int check_score, GtkWidget *lbl) {
     g_free(markup_formatted);
 }
 
+char * get_letter_text(GtkWidget *wid) {
+    GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
+    int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
+    printf("\n letter length: %d\n", letter_length);
+
+    /* NOTE: this assumes all characters are a single byte long. this glosses over some 
+    multibyte UTF-8 skullduggery but is inaccurate to the original game.*/
+
+    if (letter_length > 192) {
+        gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, 192);
+    } else {
+        gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, -1);
+    }
+    gtk_text_buffer_get_iter_at_offset(letter_buffer, &start, 0);
+
+    char* letter = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(letter_buffer), &start, &end, FALSE);
+
+    // g_free(letter_buffer);
+
+    return letter;
+}
+
 gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     char buffer[20];
-    char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
+    // char *letter = gtk_entry_get_text(GTK_ENTRY(txt));
+    char* letter = get_letter_text(txt);
+    // GtkTextBuffer *letter = gtk_text_view_get_buffer(GTK_TEXT_VIEW(txt));
     int letter_score = score_letter(letter, strlen(letter), score_ptr);
     sprintf(buffer, "Letter score: %d", score_ptr->total_score);
     gtk_label_set_text(GTK_LABEL(ptr), buffer);
@@ -71,7 +96,9 @@ int main(int argc, char *argv[])
 
     GtkWidget *box = gtk_vbox_new(FALSE, 10);
     GtkWidget *title_label = gtk_label_new("ACGC Letter Grader");
-    txt = gtk_entry_new();
+    // txt = gtk_entry_new();
+    txt = gtk_text_view_new();
+    gtk_widget_set_size_request(txt, 300, 400);
     GtkWidget *score_label = gtk_label_new("Letter score:");
 
     GtkWidget *frame_a = gtk_frame_new("Check A");
