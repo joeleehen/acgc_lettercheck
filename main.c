@@ -8,6 +8,7 @@
 #include "lettercheck.h"
 
 GtkWidget *txt;
+GtkWidget *length_label;
 GtkWidget *check_a_label;
 GtkWidget *check_b_label;
 GtkWidget *check_c_label;
@@ -86,6 +87,7 @@ char * get_letter_text(GtkWidget *wid, int key_pressed) {
 
 gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     char buffer[20];
+    char length_buffer[20];
     GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
     int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
 
@@ -106,6 +108,14 @@ gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     update_check_label(score_ptr->checkF, check_f_label);
     update_check_label(score_ptr->checkG, check_g_label);
 
+    if (event->keyval == CHAR_BACKSPACE && letter_length > 0) {
+        letter_length--;
+    } else if (letter_length != 0) {
+        letter_length++;
+    }
+    sprintf(length_buffer, "Characters: %d/192", letter_length);
+    gtk_label_set_text(GTK_LABEL(length_label), length_buffer);
+
     return FALSE;
 }
 
@@ -118,6 +128,10 @@ int main(int argc, char *argv[])
 
     GtkWidget *box = gtk_vbox_new(FALSE, 10);
     GtkWidget *title_label = gtk_label_new("ACGC Letter Grader");
+
+    length_label = gtk_label_new("Characters: 0/192");
+    gtk_misc_set_alignment(GTK_MISC(length_label), 0.95, 0.0);
+
     // txt = gtk_entry_new();
     txt = gtk_text_view_new();
     gtk_widget_set_size_request(txt, 300, 400);
@@ -166,6 +180,7 @@ int main(int argc, char *argv[])
     g_signal_connect(txt, "key-press-event", G_CALLBACK(get_letter_score), score_label);
 
     gtk_box_pack_start(GTK_BOX(box), title_label, FALSE, FALSE, 0);
+    gtk_box_pack_start(GTK_BOX(box), length_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), txt, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), score_label, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(box), checkbox, FALSE, FALSE, 0);
