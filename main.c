@@ -91,15 +91,20 @@ gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     GtkTextBuffer *letter_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(wid));
     int letter_length = gtk_text_buffer_get_char_count(GTK_TEXT_BUFFER(letter_buffer));
 
+    // FIXME: we need to do manually edit the buffer to score properly
+    // if we're editing the buffer by hand, we might as well set the text buffer
+    // instead of returning FALSE and letting the keypress percolate
     if (letter_length + 1 > 192) {
         if (event->keyval != CHAR_BACKSPACE) return TRUE;
     }
 
+    // get buffer and score
     char* letter = get_letter_text(txt, event->keyval);
     int letter_score = score_letter(letter, strlen(letter), score_ptr);
     sprintf(buffer, "Letter score: %d", score_ptr->total_score);
     gtk_label_set_text(GTK_LABEL(ptr), buffer);
 
+    // update composite score labels
     update_check_label(score_ptr->checkA, check_a_label);
     update_check_label(score_ptr->checkB, check_b_label);
     update_check_label(score_ptr->checkC, check_c_label);
@@ -108,6 +113,7 @@ gboolean get_letter_score(GtkWidget *wid, GdkEventKey *event, gpointer ptr) {
     update_check_label(score_ptr->checkF, check_f_label);
     update_check_label(score_ptr->checkG, check_g_label);
 
+    // update length label
     if (event->keyval == CHAR_BACKSPACE && letter_length > 0) {
         letter_length--;
     } else if (letter_length != 0) {
