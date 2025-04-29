@@ -233,6 +233,19 @@ int chunk_check(char* letter, int letter_length) {
 }
 
 int score_letter(char* letter, int letter_length, letter_scores* scores) {
+    if (letter_length == 0) {
+    scores->checkA = 0;
+    scores->checkB = 0;
+    scores->checkC = 0;
+    scores->checkD = 0;
+    scores->checkE = 0;
+    scores->checkF = 0;
+    scores->checkG = 0;
+    scores->total_score = 0;
+
+    return 0;
+    }
+
     scores->checkA = punc_and_cap(letter, letter_length);
     scores->checkB = trigram_check(letter, letter_length);
     scores->checkC = start_capital_check(letter, letter_length);
