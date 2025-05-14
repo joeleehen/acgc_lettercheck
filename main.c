@@ -64,7 +64,8 @@ char * get_letter_text(GtkWidget *wid, int key_pressed, gchar* c) {
 
     gunichar char_pressed = gdk_keyval_to_unicode(key_pressed);
 
-    if (!g_unichar_isprint(char_pressed) || letter_length > 193) {
+    printf("char pressed: %c (key pressed: %d)\n", char_pressed, key_pressed);
+    if (!g_unichar_isprint(char_pressed) && key_pressed != CHAR_ENTER || letter_length > 193) {
         gtk_text_buffer_get_iter_at_offset(letter_buffer, &end, -1);
         char *letter = gtk_text_buffer_get_text(GTK_TEXT_BUFFER(letter_buffer), &start, &end, FALSE);
         return letter;
